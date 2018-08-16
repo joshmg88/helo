@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios'
+import { connect } from 'react-redux'
+import { getUser } from '../../ducks/reducer'
 
 class Auth extends Component {
 
@@ -22,7 +24,24 @@ class Auth extends Component {
     handleClick = () => {
         const { username, password } = this.state
         axios.post('/api/auth/register', { username, password })
-            .then(window.location.assign('/#/dashboard'))
+            .then((user) => {
+                const { username, id, profile_pic } = user.data[0]
+                console.log(user)
+                this.props.getUser(id, username, profile_pic)
+                window.location.assign('/#/dashboard')
+            })
+    }
+
+    handleLogin = () => {
+        const { username, password } = this.state
+
+        axios.post('/api/auth/login', { username, password })
+            .then((user) => {
+                const { username, id, profile_pic } = user.data[0]
+                console.log(user)
+                this.props.getUser(id, username, profile_pic)
+                window.location.assign('/#/dashboard')
+            }).catch(console.error)
     }
 
     render() {
@@ -32,7 +51,7 @@ class Auth extends Component {
                 <div>
                     <input placeholder='username' onChange={(e) => this.handleInput(e.target.value, "username")} />
                     <input placeholder='password' onChange={(e) => this.handleInput(e.target.value, "password")} />
-                    <button>Login</button>
+                    <button onClick={this.handleLogin}>Login</button>
                     <button onClick={this.handleClick}>Register</button>
                 </div>
             </div>
@@ -40,4 +59,6 @@ class Auth extends Component {
     }
 }
 
-export default Auth;
+
+
+export default connect(null, { getUser })(Auth);

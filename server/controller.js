@@ -8,6 +8,16 @@ const register = (req, res, next) => {
         }).catch(err => { console.log(err) })
 }
 
+const login = (req, res, next) => {
+    let { username, password } = req.body
+    req.app.get('db').login([username, password])
+        .then(loggedIn => {
+            console.log(loggedIn)
+            res.status(200).send(loggedIn)
+        }).catch(err => { console.log(err) })
+}
+
 module.exports = {
-    register
+    register,
+    login
 }

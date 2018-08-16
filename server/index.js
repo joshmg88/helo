@@ -12,7 +12,7 @@ app.use(bodyParser.json())
 massive(process.env.CONNECTION_STRING).then(db => app.set('db', db)).catch(err => console.log(err))
 
 app.post('/api/auth/register', ctrl.register)
-app.post('/api/auth/login')
+app.post('/api/auth/login', ctrl.login)
 
 app.listen(port, () => {
     console.log(`listening on port: ${port}`)
