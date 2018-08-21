@@ -37,8 +37,8 @@ class Auth extends Component {
 
         axios.post('/api/auth/login', { username, password })
             .then((user) => {
-                const { username, id, profile_pic } = user.data[0]
                 console.log(user)
+                const { username, id, profile_pic } = user.data[0]
                 this.props.getUser(id, username, profile_pic)
                 window.location.assign('/#/dashboard')
             }).catch(console.error)
