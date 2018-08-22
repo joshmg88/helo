@@ -14,6 +14,8 @@ massive(process.env.CONNECTION_STRING).then(db => app.set('db', db)).catch(err =
 app.post('/api/auth/register', ctrl.register)
 app.post('/api/auth/login', ctrl.login)
 app.get('/api/posts', ctrl.getPosts)
+app.get('/api/single/:postid', ctrl.singlePost)
+app.put('/api/content', ctrl.editContent)
 
 app.listen(port, () => {
     console.log(`listening on port: ${port}`)

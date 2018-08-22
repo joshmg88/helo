@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 class Dashboard extends Component {
 
@@ -9,7 +10,8 @@ class Dashboard extends Component {
         this.state = {
             userposts: true,
             search: '',
-            posts: []
+            posts: [],
+            content: ''
         };
     }
 
@@ -25,10 +27,10 @@ class Dashboard extends Component {
 
     handlePosts = () => {
         let { userposts, search } = this.state
-        axios.get(`/api/posts?search=${search}&userposts=${userposts}`)
+        axios.get(`/api/posts?search=${search}&userposts=${userposts}&${this.props.id}`)
             .then(response => {
                 this.setState({
-                    posts: response
+                    posts: response.data
                 });
             })
     }
@@ -39,16 +41,27 @@ class Dashboard extends Component {
         })
     }
 
+    handleEdit = () => {
+        const { content, id } = this.state.posts[0]
+        axios.put('/api/content', { content, id })
+    }
+    handleContent = (val) => {
+        this.setState({
+            content: val
+        });
+    }
 
 
 
     render() {
         console.log(this.state)
 
-        // const { userPosts } = this.state
-        // let post = userPosts.map((e, i) => {
-        //     return <div key={i}> {e.title} {e.content}</div>
-        // })
+        // const posts = this.state.posts.data[0]
+        let post = this.state.posts.map((e, i) => {
+            return <Link to={`/post/${e.id}`} key={i}>
+                <div key={i}> {e.title} {e.content}</div>
+            </Link>
+        })
 
         return (
             <div>
@@ -61,6 +74,11 @@ class Dashboard extends Component {
                     <input checked={this.state.userposts} type="checkbox" id="myPosts" onChange={() => this.togglePosts()} />
                     <label htmlFor="myPosts">My Posts</label>
                 </div>
+
+                {post}
+
+                <input placeholder="edit content" onChange={(e) => this.handleContent(e.target.value)} />
+                <button onClick={this.handleEdit}>Submit</button>
 
 
 

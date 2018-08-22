@@ -19,12 +19,10 @@ const login = (req, res, next) => {
 
 const getPosts = (req, res, next) => {
     let { userposts, search, id } = req.query
-    console.log(req.query)
-    if (userposts === true && search.length > 0) {
-        req.app.get('db').post_title([search])
-            .then(posts => {
-                res.status(200).send(posts)
-            }).catch(err => { console.log(err) })
+    if (userposts && search.length > 0) {
+        req.app.get('db').post_title(search).then(posts => {
+            return res.status(200).send(posts)
+        }).catch(err => { console.log(err) })
     }
     // else if (userposts === false && !search) {
     //     req.app.get('db').get_posts([])
@@ -35,8 +33,27 @@ const getPosts = (req, res, next) => {
     // }
 }
 
+const singlePost = (req, res, next) => {
+    const { postid } = req.params
+    console.log(postid)
+    req.app.get('db').get_posts(postid).then(single => {
+        return res.status(200).send(single)
+    }).catch(err => { console.log(err) })
+}
+
+const editContent = (req, res, next) => {
+    const { content, id } = req.body
+    req.app.get('db').editPost(content, id)
+        .then(edit => {
+            res.status(200).send(edit)
+        }).catch(err => { console.log(err) })
+}
+
+
 module.exports = {
     register,
     login,
-    getPosts
+    getPosts,
+    singlePost,
+    editContent
 }
