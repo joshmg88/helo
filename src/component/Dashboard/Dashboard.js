@@ -42,7 +42,8 @@ class Dashboard extends Component {
     }
 
     handleEdit = () => {
-        const { content, id } = this.state.posts[0]
+        const { id } = this.state.posts[0]
+        const { content } = this.state
         axios.put('/api/content', { content, id })
     }
     handleContent = (val) => {
